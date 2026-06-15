@@ -34,6 +34,28 @@ depth, which the auditor never sees.
 > recovers the latent variable it is meant to track through independent noise — a
 > precondition for, not a substitute for, field validation.
 
+**Part C — noise robustness (graceful degradation).** The full scaling episode is
+re-run at five measurement-noise levels (`sigma = 5, 10, 20, 30, 40%`) applied
+independently to all three boundary observables. Pearson `r`, Spearman `rho`,
+and RMSE are reported per level so the headline correlation is presented as a
+point on a characterised curve rather than a single number.
+
+**Real-data study (`realdata_github.py`) — computability & specificity.** SEDI is
+applied to real operational telemetry from a large public code-review pipeline
+(`scikit-learn`, 3,000 PRs, 22 months). The three boundary observables
+(submission rate, median hours-to-merge, closed-unmerged abandonment) are
+computed per month, while an **independent** review-depth proxy (formal reviews +
+inline review threads per merged PR) is held out and never fed to SEDI. The study
+shows (i) SEDI is computable end-to-end from real public telemetry with no latent
+variable; (ii) the pipeline operates **below saturation** (load vs depth
+uncorrelated, `r=0.13`, n.s.); and (iii) a fixed baseline **false-alarms**
+(median 0.07, 95% of months) because the project's latency *fell* as volume
+*rose* — a secular efficiency trend the fixed-baseline decoupling term misreads —
+while a principled **rolling baseline** restores specificity (median 0.83). This
+is a real-world *computability and specificity* result, **not** a positive
+saturation-detection result: the public history contained no saturation episode.
+A saturated-regime field study remains future work.
+
 ## Headline numbers (seed 7)
 
 | Quantity | Value |
@@ -48,17 +70,25 @@ depth, which the auditor never sees.
 
 ```bash
 pip install -r requirements.txt
+
+# Synthetic results (Parts A, B, C) — no network needed
 python oversight_sim.py            # full run: stats + figures/ + results.json
 python oversight_sim.py --seed 7   # set the master seed (default 7)
 python oversight_sim.py --no-plot  # statistics only, no matplotlib
+
+# Real-data study — needs a read-only GitHub token (public_repo / read scope)
+export GITHUB_TOKEN=ghp_xxx
+python realdata_github.py --repo scikit-learn/scikit-learn --max-prs 3000 --min-month 10
 ```
 
 Outputs:
 
-- `results.json` — all reported statistics and the down-sampled coordinates used
-  for the paper figures.
+- `results.json` — synthetic statistics (Parts A/B/C) and figure coordinates.
+- `realdata_results.json` — real-data specificity statistics and coordinates.
 - `figures/figure1_reproduction.png` — Part A.
 - `figures/sedi_validation.png` — Part B (time series + scatter).
+- `figures/sedi_robustness.png` — Part C (noise sweep).
+- `figures/sedi_realdata.png` — real-data computability/specificity.
 
 ## Parameters
 
