@@ -51,6 +51,7 @@ DMAX = 1.0         # maximum review depth
 CS2 = 1.69         # service-time squared coefficient of variation
 PHI = (1.0 + CS2) / 2.0            # saturation acceleration factor = 1.345
 SIGMA_S = np.sqrt(np.log(1.0 + CS2))  # log-normal dispersion (mean preserved)
+NOISE_LEVELS = [0.05, 0.10, 0.20, 0.30, 0.40]  # Part C noise sweep (sigma)
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 FIG_DIR = os.path.join(HERE, "figures")
@@ -175,25 +176,72 @@ def compute_sedi(g_lam, g_L, g_alpha):
     return 1.0 / (quality * decoupling)
 
 
-def validate_sedi(seed=7):
-    tr = scaling_trace(seed=seed)
+def validate_sedi(seed=7, noise=0.05):
+    tr = scaling_trace(seed=seed, noise=noise)
     sedi = compute_sedi(tr["g_lam"], tr["g_L"], tr["g_alpha"])
     d = tr["D_true"]
     pear_r, pear_p = stats.pearsonr(sedi, d)
     spear_r, spear_p = stats.spearmanr(sedi, d)
     slope, intercept, r, p, se = stats.linregress(d, sedi)
+    rmse = float(np.sqrt(np.mean((sedi - d) ** 2)))
     return {
         "trace": tr, "sedi": sedi,
         "pearson_r": float(pear_r), "pearson_p": float(pear_p),
         "spearman_r": float(spear_r), "spearman_p": float(spear_p),
         "ols_slope": float(slope), "ols_intercept": float(intercept),
-        "n": int(len(d)), "sedi_final": float(sedi[-1]),
+        "n": int(len(d)), "sedi_final": float(sedi[-1]), "rmse": rmse,
     }
+
+
+def noise_robustness_sweep(seed=7, noise_levels=None):
+    """Part C: SEDI recovery under increasing measurement noise.
+
+    Each noise level sigma applies independent lognormal multiplicative noise
+    with dispersion sigma to all three boundary observables. Reports Pearson r,
+    Spearman rho, and RMSE for each level to characterise graceful degradation.
+    """
+    if noise_levels is None:
+        noise_levels = NOISE_LEVELS
+    rows = []
+    for sigma in noise_levels:
+        v = validate_sedi(seed=seed, noise=sigma)
+        rows.append({
+            "noise_pct": int(round(sigma * 100)),
+            "noise_sigma": float(sigma),
+            "pearson_r": v["pearson_r"],
+            "spearman_r": v["spearman_r"],
+            "rmse": v["rmse"],
+        })
+    return rows
 
 
 # ----------------------------------------------------------------------------
 # Plotting and reporting
 # ----------------------------------------------------------------------------
+def make_robustness_plot(rows):
+    """Figure 3: SEDI robustness under increasing measurement noise."""
+    import matplotlib.pyplot as plt
+    os.makedirs(FIG_DIR, exist_ok=True)
+    noise_pct = [r["noise_pct"] for r in rows]
+    pearson  = [r["pearson_r"] for r in rows]
+    spearman = [r["spearman_r"] for r in rows]
+    rmse     = [r["rmse"] for r in rows]
+    fig, ax1 = plt.subplots(figsize=(6, 3.6))
+    ax2 = ax1.twinx()
+    l1, = ax1.plot(noise_pct, pearson,  "b-o", ms=6, lw=2.0, label="Pearson $r$")
+    l2, = ax1.plot(noise_pct, spearman, "g-s", ms=6, lw=2.0, label="Spearman $\\rho$")
+    l3, = ax2.plot(noise_pct, rmse,     "r--^", ms=6, lw=1.8, label="RMSE (right axis)")
+    ax1.axhline(0.70, color="0.55", ls=":", lw=0.9)
+    ax1.set(xlabel="Measurement noise $\\sigma$ (%)", ylabel="Correlation",
+            xlim=(2, 43), ylim=(0.40, 1.02), xticks=noise_pct)
+    ax2.set(ylabel="RMSE", ylim=(0.0, 0.55))
+    lines, labels = [l1, l2, l3], [l.get_label() for l in [l1, l2, l3]]
+    ax1.legend(lines, labels, frameon=False, fontsize=8)
+    fig.tight_layout()
+    fig.savefig(os.path.join(FIG_DIR, "sedi_robustness.png"), dpi=200)
+    plt.close(fig)
+
+
 def make_plots(sat, val):
     import matplotlib.pyplot as plt
     os.makedirs(FIG_DIR, exist_ok=True)
@@ -236,6 +284,14 @@ def make_plots(sat, val):
     plt.close(fig)
 
 
+def pgfplots_robustness_coords(rows):
+    """Emit pgfplots coordinates for the noise-robustness figure."""
+    pr = " ".join(f"({r['noise_pct']},{r['pearson_r']:.4f})" for r in rows)
+    sp = " ".join(f"({r['noise_pct']},{r['spearman_r']:.4f})" for r in rows)
+    rm = " ".join(f"({r['noise_pct']},{r['rmse']:.4f})" for r in rows)
+    return {"pearson": pr, "spearman": sp, "rmse": rm}
+
+
 def pgfplots_coords(val, every=20):
     """Emit down-sampled coordinates for the paper's pgfplots figure."""
     tr, sedi = val["trace"], val["sedi"]
@@ -265,7 +321,7 @@ def main():
     print(f"    max relative error (rho<=0.9): {sat['max_rel_err']*100:.1f}%\n")
 
     print("[Part B] SEDI validation on synthetic scaling trace ...")
-    val = validate_sedi(seed=args.seed)
+    val = validate_sedi(seed=args.seed, noise=0.05)
     print(f"    n               = {val['n']}")
     print(f"    Pearson  r      = {val['pearson_r']:.3f}  (p={val['pearson_p']:.1e})")
     print(f"    Spearman rho    = {val['spearman_r']:.3f}  (p={val['spearman_p']:.1e})")
@@ -273,13 +329,23 @@ def main():
           f"intercept={val['ols_intercept']:.3f}")
     print(f"    SEDI at episode end = {val['sedi_final']:.3f}\n")
 
+    print("[Part C] Noise robustness sweep ...")
+    rob = noise_robustness_sweep(seed=args.seed)
+    for r in rob:
+        print(f"    noise={r['noise_pct']:2d}%  Pearson={r['pearson_r']:.3f}  "
+              f"Spearman={r['spearman_r']:.3f}  RMSE={r['rmse']:.3f}")
+    rob_coords = pgfplots_robustness_coords(rob)
+    print()
+
     results = {
         "phi": PHI, "sigma_s": SIGMA_S,
         "partA_max_rel_err": sat["max_rel_err"],
         "partB": {k: val[k] for k in
                   ("pearson_r", "pearson_p", "spearman_r", "spearman_p",
-                   "ols_slope", "ols_intercept", "n", "sedi_final")},
+                   "ols_slope", "ols_intercept", "n", "sedi_final", "rmse")},
+        "partC_robustness": rob,
         "pgfplots": pgfplots_coords(val),
+        "pgfplots_robustness": rob_coords,
     }
     with open(os.path.join(HERE, "results.json"), "w") as fh:
         json.dump(results, fh, indent=2)
@@ -287,6 +353,7 @@ def main():
 
     if not args.no_plot:
         make_plots(sat, val)
+        make_robustness_plot(rob)
         print(f"  Wrote figures to {FIG_DIR}/")
     print("Done.")
 
