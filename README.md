@@ -105,3 +105,40 @@ publication.
 ## License
 
 MIT — see [`LICENSE`](LICENSE).
+
+---
+
+## Revision experiments (added 2026-06)
+
+Five additional scripts extend the original artefact with the experiments requested in
+peer review. They are dependency-light (same `requirements.txt`) and seed-fixed.
+
+| Script | Produces | Headline result |
+|---|---|---|
+| `experiments.py` | E1–E6 → `results.json`, `figures/` | QNA vs discrete-event sim **0.3%** error; non-circular SEDI recovery **r=0.82**; **hybrid-baseline detector recall 0.88 / FPR 0.00 / AUC 1.00**; capacity-gate fix verified |
+| `figs_core.py` | saturation + noise-stress figures | Kingman vs M/G/1 agreement; graceful noise degradation |
+| `realdata_multi.py` | multi-repo SEDI (`realdata_multi_results.json`) | SEDI computable across several real review pipelines (cached GitHub API) |
+| `search_timeseries.py` | multi-year monthly SEDI (`timeseries_*.json`) | **Real load-surge detection**: `langchain` 33× surge → hybrid SEDI 0.015 at the 2023-07 onset |
+| `field_harness.py` | controlled-study design | Power analysis (30 reviewer-cases/regime for r=0.5@80%), injection schedule, depth-coding rubric |
+
+Run:
+```bash
+pip install -r requirements.txt
+python3 experiments.py            # offline, ~30s
+python3 figs_core.py              # offline
+python3 search_timeseries.py langchain-ai/langchain 2022-10 2024-06   # GitHub search API
+python3 field_harness.py          # study design + power table
+```
+
+### Key methodological addition: hybrid baselining
+The latency/throughput "decoupling" factor is confounded—process efficiency and oversight
+degradation share a boundary signature. A rolling baseline removes the efficiency false
+alarm but also suppresses detection. **Hybrid baselining** (rolling baseline for the
+efficiency-confounded decoupling factor, fixed-absolute baseline for the harm-signalling
+dispute rate) restores detection (AUC 0.62→1.00) while preserving specificity. See
+`experiments.py::E4b_gated_detector`.
+
+### Integrity note
+Synthetic and agent-based traces are labelled as such. The real-data studies use a measured
+depth *proxy* (review-thread comments per merged PR), not human-coded ground-truth depth;
+the controlled study in `field_harness.py` is the design for collecting the latter.
