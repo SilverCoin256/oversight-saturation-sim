@@ -60,7 +60,7 @@ ax[0].axvline(0.60, color="k", ls=":", lw=0.8); ax[0].set_xlabel(r"$\rho$"); ax[
 ax[0].set_title("Queue acceleration"); ax[0].legend(fontsize=8)
 ax[1].plot(rho, D, color="#009988"); ax[1].axvline(0.60,color="k",ls=":",lw=0.8)
 ax[1].set_xlabel(r"$\rho$"); ax[1].set_ylabel("review depth $D(\\rho)$"); ax[1].set_title("Depth collapse")
-fig.tight_layout(); fig.savefig(f"{FIG}/fig_saturation.png", dpi=150); plt.close(fig)
+fig.tight_layout(); fig.savefig(f"{FIG}/fig_saturation.png", dpi=300); plt.close(fig)
 king_err = float(np.max(np.abs(Lq_king[:-1]-Lq_sim[:-1])/Lq_sim[:-1]))
 print("max |Kingman-sim|/sim for rho<=0.9:", round(king_err,3))
 
@@ -78,7 +78,7 @@ ax2.plot(levels, rmse, "^:", color="#ee7733", label="RMSE")
 ax.axhline(0.70, color="k", ls=":", lw=0.8)
 ax.set_xlabel("noise level (%)"); ax.set_ylabel("correlation"); ax2.set_ylabel("RMSE")
 ax.set_ylim(0,1); ax.legend(loc="lower left", fontsize=8); ax.set_title("SEDI noise-stress")
-fig.tight_layout(); fig.savefig(f"{FIG}/fig_noise.png", dpi=150); plt.close(fig)
+fig.tight_layout(); fig.savefig(f"{FIG}/fig_noise.png", dpi=300); plt.close(fig)
 import json
 print(json.dumps(dict(kingman_max_relerr=round(king_err,3),
                       noise_pearson=dict(zip(levels,[round(p,3) for p in pear])),

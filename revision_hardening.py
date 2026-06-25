@@ -124,7 +124,7 @@ def R1_recovery_ci(nseed=300):
     ax.axvline(rs.mean(), color="#0077bb", ls="--"); ax.axvline(rls.mean(), color="#555", ls="--")
     ax.set_xlabel("Pearson r vs emergent depth"); ax.set_ylabel("count")
     ax.set_title(f"R1: recovery over {nseed} independent agent realisations"); ax.legend(fontsize=8)
-    fig.tight_layout(); fig.savefig(f"{FIG}/fig_recovery_ci.png", dpi=150); plt.close(fig)
+    fig.tight_layout(); fig.savefig(f"{FIG}/fig_recovery_ci.png", dpi=300); plt.close(fig)
     return OUT["R1_recovery_ci"]
 
 # =========================================================================== R2
@@ -162,7 +162,7 @@ def R3_noise_errorbars(nseed=100):
     ax.axhline(0.70, color="k", ls=":", lw=0.8)
     ax.set_xlabel("noise level (%)"); ax.set_ylabel("Pearson r"); ax.set_ylim(0, 1)
     ax.set_title(f"R3: noise-stress, {nseed} seeds/level"); ax.legend(fontsize=8)
-    fig.tight_layout(); fig.savefig(f"{FIG}/fig_noise.png", dpi=150); plt.close(fig)
+    fig.tight_layout(); fig.savefig(f"{FIG}/fig_noise.png", dpi=300); plt.close(fig)
     return OUT["R3_noise_errorbars"]
 
 # =========================================================================== R4
@@ -258,7 +258,7 @@ def R5_effect_size():
     ax.axhline(0.5, color="k", ls=":", lw=0.8); ax.set_ylim(0.4, 1.02)
     ax.set_xlabel("injected depth drop (episode)"); ax.set_ylabel("detection AUC (mean, 40 seeds)")
     ax.set_title("R5: detection vs effect size")
-    fig.tight_layout(); fig.savefig(f"{FIG}/fig_effectsize.png", dpi=150); plt.close(fig)
+    fig.tight_layout(); fig.savefig(f"{FIG}/fig_effectsize.png", dpi=300); plt.close(fig)
     return OUT["R5_effect_size"]
 
 # =========================================================================== R6

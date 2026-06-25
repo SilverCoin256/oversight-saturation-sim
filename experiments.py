@@ -147,7 +147,7 @@ def E1_ablation():
     ax[1].set_ylim(0, 1); ax[1].tick_params(axis="x", rotation=40); ax[1].set_title("Detection (clean trace)")
     for a in ax:
         for lab in a.get_xticklabels(): lab.set_ha("right")
-    fig.tight_layout(); fig.savefig(f"{FIGDIR}/fig_ablation.png", dpi=150); plt.close(fig)
+    fig.tight_layout(); fig.savefig(f"{FIGDIR}/fig_ablation.png", dpi=300); plt.close(fig)
     return out
 
 # ============================================================================ E2
@@ -217,7 +217,7 @@ def E2_noncircular(seed=7):
     ax.plot(s_lat, label=f"latency-only (r={r_lat:.2f})", color="#999999", ls="--")
     ax.set_xlabel("step"); ax.set_ylabel("normalised"); ax.legend(fontsize=8)
     ax.set_title("E2: non-circular validation (agent-based DGP)")
-    fig.tight_layout(); fig.savefig(f"{FIGDIR}/fig_noncircular.png", dpi=150); plt.close(fig)
+    fig.tight_layout(); fig.savefig(f"{FIGDIR}/fig_noncircular.png", dpi=300); plt.close(fig)
     return RESULTS["E2_noncircular"]
 
 # ============================================================================ E3
@@ -259,7 +259,7 @@ def E3_confound(seed=7):
         ax.set_title(kind); ax.set_ylim(0,1.2); ax.set_xlabel("month")
         if kind == "efficiency": ax.legend(fontsize=7)
     fig.suptitle("E3: efficiency vs acute vs gradual degradation (fraction below 0.5 = alarms)")
-    fig.tight_layout(); fig.savefig(f"{FIGDIR}/fig_confound.png", dpi=150); plt.close(fig)
+    fig.tight_layout(); fig.savefig(f"{FIGDIR}/fig_confound.png", dpi=300); plt.close(fig)
     RESULTS["E3_confound"] = res
     # interpretation flags
     res["_interpretation"] = dict(
@@ -299,7 +299,7 @@ def E4_detection(seed=7):
     fig, ax = plt.subplots(figsize=(4.2,4))
     ax.plot(fprs, tprs, color="#0077bb"); ax.plot([0,1],[0,1],"k:",lw=0.8)
     ax.set_xlabel("FPR"); ax.set_ylabel("TPR"); ax.set_title(f"E4 ROC (AUC={auc:.2f})")
-    fig.tight_layout(); fig.savefig(f"{FIGDIR}/fig_roc.png", dpi=150); plt.close(fig)
+    fig.tight_layout(); fig.savefig(f"{FIGDIR}/fig_roc.png", dpi=300); plt.close(fig)
     return RESULTS["E4_detection"]
 
 # ============================================================================ E4b
@@ -365,7 +365,7 @@ def E4b_gated_detector(seed=11):
     ax.fill_between(np.arange(T), 0, 1.2, where=sat==1, color="#ffd9d9", label="true degradation")
     ax.set_ylim(0,1.25); ax.set_xlabel("month"); ax.legend(fontsize=7, ncol=2)
     ax.set_title("E4b: hybrid-baseline SEDI (efficiency-specific + degradation-sensitive)")
-    fig.tight_layout(); fig.savefig(f"{FIGDIR}/fig_gated.png", dpi=150); plt.close(fig)
+    fig.tight_layout(); fig.savefig(f"{FIGDIR}/fig_gated.png", dpi=300); plt.close(fig)
     return RESULTS["E4b_gated_detector"]
 
 # ============================================================================ E5
@@ -501,7 +501,7 @@ def E5_qna():
     ax.bar(idx+w/2, RESULTS["E5_qna_3node"]["Lq_sim"], w, label="DES sim", color="#cc6677")
     ax.set_xticks(idx); ax.set_xticklabels(["FT","SR","AC"]); ax.set_ylabel("mean waiting Lq")
     ax.set_title("E5: QNA vs discrete-event sim (3-node, with remand feedback)")
-    ax.legend(); fig.tight_layout(); fig.savefig(f"{FIGDIR}/fig_qna.png", dpi=150); plt.close(fig)
+    ax.legend(); fig.tight_layout(); fig.savefig(f"{FIGDIR}/fig_qna.png", dpi=300); plt.close(fig)
     return RESULTS["E5_qna_3node"]
 
 # ============================================================================ E6

@@ -135,7 +135,7 @@ def main():
         ax.set_xlabel(f'{s["month"][0]} .. {s["month"][-1]}', fontsize=7)
         if ax is axes[0]: ax.legend(fontsize=7)
     fig.suptitle("Real multi-repo SEDI (depth proxy = comments per merged PR)")
-    fig.tight_layout(); fig.savefig(f"{FIG}/fig_multirepo.png", dpi=150); plt.close(fig)
+    fig.tight_layout(); fig.savefig(f"{FIG}/fig_multirepo.png", dpi=300); plt.close(fig)
     json.dump(results, open("realdata_multi_results.json", "w"), indent=2)
     print(json.dumps(results, indent=2))
 

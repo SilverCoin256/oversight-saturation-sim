@@ -157,7 +157,7 @@ def R7c_abandonment():
     ax[1].axvline(1.0, color="k", ls=":", lw=0.8)
     ax[1].set_xlabel("offered load $a=\\lambda/(c\\mu)$"); ax[1].set_ylabel("P(abandon, unreviewed)")
     ax[1].set_title("R7c: abandonment-driven depth loss")
-    fig.tight_layout(); fig.savefig(f"{FIG}/fig_multiserver_robust.png", dpi=150); plt.close(fig)
+    fig.tight_layout(); fig.savefig(f"{FIG}/fig_multiserver_robust.png", dpi=300); plt.close(fig)
     return OUT["R7c_abandonment"]
 
 if __name__ == "__main__":

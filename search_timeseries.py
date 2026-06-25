@@ -126,7 +126,7 @@ def main():
     ax.set_ylim(0, 1.3); ax.set_ylabel("normalised / SEDI"); ax2.set_ylabel("median hours")
     ax.set_title(f"{repo}: real monthly SEDI ({res['window']})")
     ax.legend(fontsize=7, loc="upper right")
-    fig.tight_layout(); fig.savefig(f"{FIG}/fig_timeseries.png", dpi=150); plt.close(fig)
+    fig.tight_layout(); fig.savefig(f"{FIG}/fig_timeseries.png", dpi=300); plt.close(fig)
     print(json.dumps(res, indent=2))
 
 if __name__ == "__main__":
