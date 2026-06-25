@@ -1,0 +1,186 @@
+{
+  "R1_recovery_ci": {
+    "n_seeds": 300,
+    "sedi_r_mean": 0.8131,
+    "sedi_r_sd": 0.0158,
+    "sedi_r_ci95": [
+      0.778,
+      0.842
+    ],
+    "latency_only_r_mean": 0.5453,
+    "latency_only_r_ci95": [
+      0.471,
+      0.608
+    ],
+    "prob_sedi_beats_latency": 1.0,
+    "canonical_seed7_r": 0.8244,
+    "block_bootstrap_ci95": [
+      0.453,
+      0.921
+    ]
+  },
+  "R2_dgp_forms": {
+    "satexp": {
+      "r_mean": 0.814,
+      "r_ci95": [
+        0.774,
+        0.838
+      ]
+    },
+    "logistic": {
+      "r_mean": 0.875,
+      "r_ci95": [
+        0.851,
+        0.89
+      ]
+    },
+    "power": {
+      "r_mean": 0.755,
+      "r_ci95": [
+        0.711,
+        0.787
+      ]
+    },
+    "linear": {
+      "r_mean": 0.855,
+      "r_ci95": [
+        0.828,
+        0.878
+      ]
+    }
+  },
+  "R3_noise_errorbars": {
+    "levels": [
+      5,
+      10,
+      20,
+      30,
+      40
+    ],
+    "pearson_mean": [
+      0.896,
+      0.879,
+      0.824,
+      0.759,
+      0.692
+    ],
+    "pearson_ci95": [
+      [
+        0.888,
+        0.903
+      ],
+      [
+        0.868,
+        0.891
+      ],
+      [
+        0.808,
+        0.844
+      ],
+      [
+        0.736,
+        0.786
+      ],
+      [
+        0.659,
+        0.721
+      ]
+    ],
+    "rmse_mean": [
+      0.359,
+      0.369,
+      0.394,
+      0.42,
+      0.446
+    ]
+  },
+  "R4_baselines": {
+    "hybrid_SEDI": {
+      "auc": 1.0,
+      "auc_ci95": [
+        1.0,
+        1.0
+      ]
+    },
+    "rolling_SEDI": {
+      "auc": 0.606,
+      "auc_ci95": [
+        0.517,
+        0.694
+      ]
+    },
+    "raw_latency": {
+      "auc": 0.004,
+      "auc_ci95": [
+        0.0,
+        0.01
+      ]
+    },
+    "QIE_occupancy": {
+      "auc": 0.118,
+      "auc_ci95": [
+        0.08,
+        0.162
+      ]
+    },
+    "kalman": {
+      "auc": 0.837,
+      "auc_ci95": [
+        0.775,
+        0.894
+      ]
+    },
+    "CUSUM_page_on_latency": {
+      "auc": 0.5
+    }
+  },
+  "R4_note": "Naive latency monitoring (AUC<0.5) and a QIE-style boundary-occupancy estimator are ACTIVELY MISLED by the efficiency/degradation confound: both throughput and depth-collapse compress latency, so latency falls in both regimes. A Page CUSUM on latency inherits the same confound. Only estimators that keep the dispute signal on an absolute baseline (hybrid SEDI; Kalman) separate the two. This is the empirical reason a boundary-congestion proxy (QIE lineage) does not suffice for review depth.",
+  "R5_effect_size": {
+    "effect_sizes": [
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.5,
+      0.6
+    ],
+    "auc_mean": [
+      0.955,
+      0.999,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "note": "AUC rises with episode depth-drop; it is 1.0 only for large injected effects, falling toward chance for small ones -- detection is not trivially perfect."
+  },
+  "R6_agentsim_sensitivity": {
+    "by_param": {
+      "nrev": {
+        "4": 0.845,
+        "6": 0.816,
+        "8": 0.813,
+        "12": 0.828,
+        "16": 0.841
+      },
+      "thr_hi": {
+        "0.7": 0.819,
+        "0.8": 0.813,
+        "0.9": 0.806
+      },
+      "rush_hi": {
+        "3.0": 0.795,
+        "5.0": 0.813,
+        "8.0": 0.827
+      },
+      "lag_hi": {
+        "11": 0.824,
+        "21": 0.813,
+        "31": 0.803
+      }
+    },
+    "overall_r_min": 0.76,
+    "overall_r_max": 0.877,
+    "overall_r_mean": 0.82
+  }
+}

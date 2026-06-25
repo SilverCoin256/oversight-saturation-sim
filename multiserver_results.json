@@ -1,0 +1,42 @@
+{
+  "R7a_phi_invariance": {
+    "rho": 0.85,
+    "cs2": 1.69,
+    "Phi_predicted": 1.345,
+    "by_c": {
+      "c=1": {
+        "Lq_lognormal": 6.175,
+        "Lq_exponential": 4.799,
+        "ratio": 1.287
+      },
+      "c=2": {
+        "Lq_lognormal": 5.715,
+        "Lq_exponential": 4.245,
+        "ratio": 1.346
+      },
+      "c=5": {
+        "Lq_lognormal": 4.812,
+        "Lq_exponential": 3.708,
+        "ratio": 1.298
+      }
+    },
+    "note": "Wq(log-normal)/Wq(exp) ~ Phi for every c: the (Ca^2+Cs^2)/2 variability penalty is server-count invariant, so Observation 1 is not a c=1 artefact."
+  },
+  "R7b_stability_invariance": {
+    "rho_max": 0.7014,
+    "note": "rho^eff=rho/D(rho) with rho the PER-SERVER utilisation Lambda/(c*mu0); the stability boundary rho*exp(k(rho-rho_c))=1 contains no c, so rho_max~0.70 holds for all c. Extra reviewers raise c*mu0 (absolute capacity) but each server still saturates at the same per-server load, so multi-server staffing does not by itself escape Assumption 2's sublinear-capacity deficit."
+  },
+  "R7c_abandonment": {
+    "c": 5,
+    "patience_rate": 0.5,
+    "abandon_by_offered_load": {
+      "a=0.6": 0.021,
+      "a=0.8": 0.051,
+      "a=1.0": 0.104,
+      "a=1.2": 0.189,
+      "a=1.5": 0.336,
+      "a=2.0": 0.5
+    },
+    "note": "With reneging the queue is always stable, but the abandoned fraction climbs with offered load; abandoned cases exit with zero human review. Oversight saturation thus persists under abandonment as depth loss by attrition rather than unbounded delay -- the failure mode changes form, not existence."
+  }
+}
