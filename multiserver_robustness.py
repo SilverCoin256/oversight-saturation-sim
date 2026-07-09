@@ -1,3 +1,4 @@
+import os as _os; _os.makedirs("figures", exist_ok=True)
 """
 Queueing robustness the review demanded: human review teams are MULTI-SERVER (c>1) and
 real queues have ABANDONMENT (cases time out / auto-merge). We show the paper's two
@@ -23,7 +24,7 @@ import numpy as np
 import matplotlib; matplotlib.use("Agg"); import matplotlib.pyplot as plt
 
 OUT = {}
-FIG = "../figures"
+FIG = "figures"
 
 def lognormal_sampler(mean, cs2, rng):
     sigma = math.sqrt(math.log(1 + cs2)); mu = math.log(mean) - sigma**2 / 2

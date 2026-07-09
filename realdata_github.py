@@ -198,7 +198,7 @@ def make_realdata_plot(rows, sedi_fixed, sedi_roll, depth_norm):
               title="Specificity on a healthy pipeline")
     ax[1].legend(frameon=False, fontsize=8, loc="lower right")
     fig.tight_layout()
-    fig.savefig(os.path.join(FIG_DIR, "sedi_realdata.png"), dpi=200)
+    fig.savefig(os.path.join(FIG_DIR, "sedi_realdata.png"), dpi=300)
     plt.close(fig)
 
 

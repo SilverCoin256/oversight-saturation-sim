@@ -13,14 +13,19 @@ import numpy as np
 from scipy import stats
 import matplotlib; matplotlib.use("Agg"); import matplotlib.pyplot as plt
 
-CACHE = "/tmp/gh_search"; os.makedirs(CACHE, exist_ok=True)
+SNAPSHOTS = "data_snapshots"  # bundled with the repo — ships the exact months used in the paper
+CACHE = "/tmp/gh_search"; os.makedirs(CACHE, exist_ok=True)  # runtime cache for months beyond that range
 FIG = "figures"; TOKEN = os.environ.get("GH_TOKEN", "")
 
 def search_month(repo, year, month):
     last = calendar.monthrange(year, month)[1]
     q = f"repo:{repo}+type:pr+created:{year}-{month:02d}-01..{year}-{month:02d}-{last:02d}"
     url = f"https://api.github.com/search/issues?q={q}&per_page=100"
-    key = os.path.join(CACHE, f"{repo.replace('/','_')}_{year}-{month:02d}.json")
+    fname = f"{repo.replace('/','_')}_{year}-{month:02d}.json"
+    snapshot_key = os.path.join(SNAPSHOTS, fname)
+    if os.path.exists(snapshot_key):
+        return json.load(open(snapshot_key))
+    key = os.path.join(CACHE, fname)
     if os.path.exists(key):
         return json.load(open(key))
     req = urllib.request.Request(url, headers={"Accept": "application/vnd.github+json", "User-Agent": "sedi"})

@@ -1,3 +1,4 @@
+import os as _os; _os.makedirs("figures", exist_ok=True)
 """
 Reviewer-hardening experiment suite. Adds the statistics, baselines, and robustness
 checks that a hostile referee would demand, all from REAL computation (no hand-set
@@ -27,7 +28,7 @@ from scipy import stats
 from experiments import (build_scaling_trace, sedi, sedi_rolling, degradation_exp,
                          kalman_depth, auc_mannwhitney)
 
-FIG = "../figures"
+FIG = "figures"
 OUT = {}
 
 # --------------------------------------------------------------------------- agent sim

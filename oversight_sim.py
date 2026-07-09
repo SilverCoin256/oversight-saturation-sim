@@ -238,7 +238,7 @@ def make_robustness_plot(rows):
     lines, labels = [l1, l2, l3], [l.get_label() for l in [l1, l2, l3]]
     ax1.legend(lines, labels, frameon=False, fontsize=8)
     fig.tight_layout()
-    fig.savefig(os.path.join(FIG_DIR, "sedi_robustness.png"), dpi=200)
+    fig.savefig(os.path.join(FIG_DIR, "sedi_robustness.png"), dpi=300)
     plt.close(fig)
 
 
@@ -263,7 +263,7 @@ def make_plots(sat, val):
               xlim=(0, 1), ylim=(0, 1.1))
     ax[1].legend(frameon=False, fontsize=8)
     fig.tight_layout()
-    fig.savefig(os.path.join(FIG_DIR, "figure1_reproduction.png"), dpi=200)
+    fig.savefig(os.path.join(FIG_DIR, "figure1_reproduction.png"), dpi=300)
     plt.close(fig)
 
     # SEDI validation: time series + scatter
@@ -280,7 +280,7 @@ def make_plots(sat, val):
     ax[1].set(xlabel="latent depth $D$", ylabel="SEDI",
               title=f"Pearson $r$ = {val['pearson_r']:.3f}")
     fig.tight_layout()
-    fig.savefig(os.path.join(FIG_DIR, "sedi_validation.png"), dpi=200)
+    fig.savefig(os.path.join(FIG_DIR, "sedi_validation.png"), dpi=300)
     plt.close(fig)
 
 
