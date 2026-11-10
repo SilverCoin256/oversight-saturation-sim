@@ -5,8 +5,7 @@ Reproducibility artefact for the paper:
 > **Capacity Degradation in Distributed Human-in-the-Loop AI Pipelines: A
 > Queueing-Network Analysis of Oversight Saturation**
 
-A single, dependency-light Python script reproduces every quantitative result in
-the paper.
+Run `oversight_sim.py` to reproduce the queueing simulation and test whether the State-Estimation Degradation Index (SEDI) tracks simulated review depth. Separate scripts examine how the index behaves on public GitHub pull-request records.
 
 ## What it does
 
@@ -34,11 +33,10 @@ depth, which the auditor never sees.
 > recovers the latent variable it is meant to track through independent noise — a
 > precondition for, not a substitute for, field validation.
 
-**Part C — noise robustness (graceful degradation).** The full scaling episode is
+**Part C. Sensitivity to measurement noise.** The full scaling episode is
 re-run at five measurement-noise levels (`sigma = 5, 10, 20, 30, 40%`) applied
 independently to all three boundary observables. Pearson `r`, Spearman `rho`,
-and RMSE are reported per level so the headline correlation is presented as a
-point on a characterised curve rather than a single number.
+and RMSE are reported at each level.
 
 **Real-data study (`realdata_github.py`) — computability & specificity.** SEDI is
 applied to real operational telemetry from a large public code-review pipeline
